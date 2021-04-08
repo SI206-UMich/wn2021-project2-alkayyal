@@ -33,7 +33,6 @@ def get_titles_from_search_results(filename):
     r.close()
     return lst
 
-
 def get_search_links():
     """
     Write a function that creates a BeautifulSoup object after retrieving content from
@@ -47,9 +46,16 @@ def get_search_links():
     “https://www.goodreads.com/book/show/kdkd".
 
     """
+    r = open("https://www.goodreads.com/search?q=fantasy&qid=NwUsLiA2Nc")
+    soup = BeautifulSoup(r, 'html.parser') 
 
+    book_title = soup.find_all('span',role='heading')
+    
+    lst = []
+    for i in range(10):
+        lst.append("https://www.goodreads.com" + book_title[i].get('href'))
 
-    pass
+    return lst
 
 
 def get_book_summary(book_url):
@@ -65,8 +71,16 @@ def get_book_summary(book_url):
     You can easily capture CSS selectors with your browser's inspector window.
     Make sure to strip() any newlines from the book title and number of pages.
     """
+    r = open(book_url)
+    soup = BeautifulSoup(r, 'html.parser') 
 
-    pass
+    book_title = soup.find('h1',id='bookTitle').text.replace('\n',"")
+
+    author_name = soup.find('span', itemprop='name').text.replace('\n',"")
+
+    page_num = soup.find('span', itemprop='numberOfPages').text.replace('\n',"")
+
+    return  (book_title, author_name, page_num)
 
 
 def summarize_best_books(filepath):
